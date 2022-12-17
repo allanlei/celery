@@ -252,18 +252,18 @@ class BaseResultConsumer:
     def on_after_fork(self):
         pass
 
-    def drain_events_until(self, p, timeout=None, on_interval=None):
+    def drain_events_until(self, p, timeout=None, interval=None, on_interval=None):
         return self.drainer.drain_events_until(
-            p, timeout=timeout, on_interval=on_interval)
+            p, timeout=timeout, interval=interval, on_interval=on_interval)
 
     def _wait_for_pending(self, result,
-                          timeout=None, on_interval=None, on_message=None,
+                          timeout=None, interval=None, on_interval=None, on_message=None,
                           **kwargs):
-        self.on_wait_for_pending(result, timeout=timeout, **kwargs)
+        self.on_wait_for_pending(result, timeout=timeout, interval=interval, **kwargs)
         prev_on_m, self.on_message = self.on_message, on_message
         try:
             for _ in self.drain_events_until(
-                    result.on_ready, timeout=timeout,
+                    result.on_ready, timeout=timeout, interval=interval,
                     on_interval=on_interval):
                 yield
                 sleep(0)
